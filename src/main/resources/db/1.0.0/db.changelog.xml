@@ -1,0 +1,14 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <include relativeToChangelogFile="true" file="001-users-ddl.xml"/>
+    <include relativeToChangelogFile="true" file="002-articles-ddl.xml"/>
+    <include relativeToChangelogFile="true" file="003-comments-ddl.xml"/>
+    <include relativeToChangelogFile="true" file="004-user_followings-ddl.xml"/>
+    <include relativeToChangelogFile="true" file="005-user_favorites-ddl.xml"/>
+    <include relativeToChangelogFile="true" file="006-tags-ddl.xml"/>
+    <include relativeToChangelogFile="true" file="007-article_tags-ddl.xml"/>
+</databaseChangeLog>

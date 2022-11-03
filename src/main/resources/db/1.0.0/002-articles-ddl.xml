@@ -1,0 +1,40 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet author="rogerfilipes" id="002-articles-ddl">
+        <createTable schemaName="public" tableName="articles">
+            <column name="id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="slug" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="title" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="body" type="VARCHAR(512)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="author" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="datetime2">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="datetime2"/>
+        </createTable>
+
+        <addPrimaryKey schemaName="public" tableName="articles" columnNames="id" constraintName="pk_articles"/>
+
+        <addUniqueConstraint schemaName="public" tableName="articles" columnNames="slug"/>
+
+        <addForeignKeyConstraint constraintName="fk_articles_users"  baseTableSchemaName="public" baseTableName="articles" baseColumnNames="author"
+                                 referencedTableSchemaName="public" referencedTableName="users" referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

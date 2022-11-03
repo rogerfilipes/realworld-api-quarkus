@@ -1,0 +1,28 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet author="rogerfilipes" id="005-user_favorites-ddl">
+        <createTable schemaName="public" tableName="user_favorites">
+            <column name="user_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="article" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="datetime2">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey schemaName="public" tableName="user_favorites" columnNames="user_id,article" constraintName="pk_user_favorites"/>
+
+        <addForeignKeyConstraint constraintName="fk_user_favorites_user"  baseTableSchemaName="public" baseTableName="user_favorites" baseColumnNames="user_id"
+                                 referencedTableSchemaName="public" referencedTableName="users" referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint constraintName="fk_user_favorites_article"  baseTableSchemaName="public" baseTableName="user_favorites" baseColumnNames="article"
+                                 referencedTableSchemaName="public" referencedTableName="articles" referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

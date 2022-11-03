@@ -1,0 +1,25 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet author="rogerfilipes" id="006-article_tags-ddl">
+        <createTable schemaName="public" tableName="article_tags">
+            <column name="article" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tag" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey schemaName="public" tableName="article_tags" columnNames="article,tag" constraintName="pk_article_tags"/>
+
+        <addForeignKeyConstraint baseTableSchemaName="public" baseTableName="article_tags" baseColumnNames="article" constraintName="fk_article_tags_article"
+                                 referencedTableSchemaName="public" referencedTableName="articles" referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableSchemaName="public" baseTableName="article_tags" baseColumnNames="tag" constraintName="fk_article_tags_tags"
+                                 referencedTableSchemaName="public" referencedTableName="tags" referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

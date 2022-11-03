@@ -1,0 +1,28 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet author="rogerfilipes" id="004-user_followings-ddl">
+        <createTable schemaName="public" tableName="user_followings">
+            <column name="user_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="follows_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="datetime2">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey schemaName="public" tableName="user_followings" columnNames="user_id,follows_id" constraintName="pk_user_follows"/>
+
+        <addForeignKeyConstraint constraintName="fk_user_followings_users_user"  baseTableSchemaName="public" baseTableName="user_followings" baseColumnNames="user_id"
+                                 referencedTableSchemaName="public" referencedTableName="users" referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint constraintName="fk_user_followings_users_follows"  baseTableSchemaName="public" baseTableName="user_followings" baseColumnNames="follows_id"
+                                 referencedTableSchemaName="public" referencedTableName="users" referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>
