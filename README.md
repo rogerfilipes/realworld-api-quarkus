@@ -69,6 +69,11 @@ mvn wrapper:wrapper
 * Swagger UI http://localhost:8080/q/swagger-ui/
 * Quarkus Dev http://localhost:8080/q/dev
 
+### Run the tests
+```shell
+ ./mvnw test
+ ```
+
 
 ### Building jar file
 
