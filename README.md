@@ -78,5 +78,10 @@ mvn wrapper:wrapper
 ### Building jar file
 
 ```shell
-./mvnw package
+./mvnw clean package
+```
+
+### Build and start containers
+```shell
+docker-compose -f ./documentation/infrastructure/testing/docker-compose.yml -p realworldapi up -d
 ```

@@ -1,0 +1,31 @@
+# Use postgres/example user/password credentials
+version: '3.8'
+
+services:
+  quarkus-app:
+    build:
+      context: ..
+      dockerfile: ../src/main/docker/Dockerfile.jvm
+    depends_on:
+      - db
+    ports:
+      - 8080:8080
+    networks:
+      - conduit
+
+  db:
+    image: postgres:14
+    restart: always
+    environment:
+      POSTGRES_USER: dbuser
+      POSTGRES_PASSWORD: dbpassword
+      POSTGRES_DB: conduit
+    ports:
+      - 5432:5432
+    networks:
+      - conduit
+
+networks:
+  conduit:
+    driver: bridge
+
