@@ -175,7 +175,26 @@ public class ArticlesApiTest {
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.SC_OK)
-                .body("articles", hasSize(equalTo(2)));
+                .body("articles", hasSize(greaterThan(2)));
+    }
+
+    @Test
+    void listArticlesByAuthorAndTag(){
+        createArticle("title author la1", "tagged5", TOKEN_USER_1);
+        createArticle("title author la2","tagged_autag", TOKEN_USER_1);
+        createArticle("title author la3", "tagged5", TOKEN_USER_2);
+        createArticle("title author la4", "tagged_autag", TOKEN_USER_2);
+
+        given()
+                .log().all()
+                .queryParam("author","user_2")
+                .queryParam("tag","tagged_autag")
+                .get(Constants.Path.ARTICLES)
+
+                .then()
+                .log().all()
+                .statusCode(HttpStatus.SC_OK)
+                .body("articles", hasSize(equalTo(1)));
     }
 
     @Test

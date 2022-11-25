@@ -6,10 +6,7 @@ import io.github.rogerfilipes.domain.article.model.ArticleData;
 import io.github.rogerfilipes.infrastructure.repository.jooq.Tables;
 import io.github.rogerfilipes.infrastructure.repository.jooq.tables.records.ArticlesRecord;
 import org.apache.commons.lang3.StringUtils;
-import org.jooq.DSLContext;
-import org.jooq.Record1;
-import org.jooq.SelectJoinStep;
-import org.jooq.TableField;
+import org.jooq.*;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -30,28 +27,34 @@ public class ArticlesRepository {
 
     private static SelectJoinStep<?> buildCriteriaQuery(ArticleCriteriaFilter criteriaFilter, SelectJoinStep<?> query) {
         if (StringUtils.isNotBlank(criteriaFilter.getAuthor())) {
-            query.join(Tables.USERS).on(ARTICLES.AUTHOR.eq(USERS.ID)).where(USERS.USERNAME.equalIgnoreCase(criteriaFilter.getAuthor()));
+            query = query.join(Tables.USERS).on(ARTICLES.AUTHOR.eq(USERS.ID)).and(USERS.USERNAME.equalIgnoreCase(criteriaFilter.getAuthor()));
         }
 
         if (StringUtils.isNotBlank(criteriaFilter.getTag())) {
-            query.join(Tables.ARTICLE_TAGS).on(ARTICLES.ID.eq(ARTICLE_TAGS.ARTICLE)).join(TAGS).on(ARTICLE_TAGS.TAG.eq(TAGS.ID)).where(TAGS.TAG.equalIgnoreCase(criteriaFilter.getTag()));
+            query = query.join(Tables.ARTICLE_TAGS).on(ARTICLES.ID.eq(ARTICLE_TAGS.ARTICLE)).join(TAGS).on(ARTICLE_TAGS.TAG.eq(TAGS.ID)).and(TAGS.TAG.equalIgnoreCase(criteriaFilter.getTag()));
         }
 
         if (StringUtils.isNotBlank(criteriaFilter.getFavorited())) {
-            query.join(Tables.USER_FAVORITES).on(ARTICLES.ID.eq(USER_FAVORITES.ARTICLE)).join(USERS).on(USER_FAVORITES.USER_ID.eq(USERS.ID)).where(USERS.USERNAME.equalIgnoreCase(criteriaFilter.getFavorited()));
+            query = query.join(Tables.USER_FAVORITES).on(ARTICLES.ID.eq(USER_FAVORITES.ARTICLE)).join(USERS).on(USER_FAVORITES.USER_ID.eq(USERS.ID)).and(USERS.USERNAME.equalIgnoreCase(criteriaFilter.getFavorited()));
         }
 
+        return query;
+    }
 
-        if (criteriaFilter.getSort() != null) {
+    private SortField getSortField(ArticleCriteriaFilter criteriaFilter) {
+        SortField sortField;
+        if (criteriaFilter.getSort() == null) {
+            sortField = ARTICLES.CREATED_AT.desc();
+        }else{
             TableField field = criteriaFilter.getSort().getSortField().getField();
             if (criteriaFilter.getSort().getSortBy() == ArticleCriteriaFilter.SortBy.ASC) {
-                field.asc();
+                sortField= field.asc();
             } else {
-                field.desc();
+                sortField = field.desc();
             }
-            query.orderBy(field);
         }
-        return query;
+
+        return  sortField;
     }
 
     public void create(ArticleData articleData) {
@@ -94,7 +97,7 @@ public class ArticlesRepository {
         buildCriteriaQuery(criteriaFilter, query);
         buildCriteriaQuery(criteriaFilter, queryCount);
 
-        List<ArticleData> articleData = query.offset(criteriaFilter.getOffset()).limit(criteriaFilter.getLimit()).fetchInto(ArticleData.class);
+        List<ArticleData> articleData = query.orderBy(getSortField(criteriaFilter)).offset(criteriaFilter.getOffset()).limit(criteriaFilter.getLimit()).fetchInto(ArticleData.class);
         Integer total = queryCount.fetchOne(0, Integer.class);
         return new PageResult<>(articleData, total);
     }
